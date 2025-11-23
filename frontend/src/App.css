@@ -14,20 +14,37 @@
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  transition: opacity 0.2s ease;
+}
+
+.header-content:hover {
+  opacity: 0.85;
+}
+
+.app-logo {
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.header-text {
+  text-align: left;
+}
+
 .app-header h1 {
   margin: 0;
   font-size: 1.75rem;
   font-weight: 600;
   letter-spacing: -0.025em;
-  transition: opacity 0.2s ease;
-}
-
-.app-header h1:hover {
-  opacity: 0.85;
 }
 
 .subtitle {
-  margin: 0.5rem 0 0;
+  margin: 0.25rem 0 0;
   font-size: 0.95rem;
   opacity: 0.9;
   font-weight: 400;
@@ -883,6 +900,136 @@
   color: #991b1b;
 }
 
+/* Recommendations Section */
+.recommendations-section {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e2e8f0;
+}
+
+.recommendations-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.recommendations-header h3 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.recommendations-icon {
+  width: 28px;
+  height: 28px;
+  color: #3b82f6;
+}
+
+.recommendations-disclaimer {
+  margin: 0 0 1.5rem;
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.5;
+}
+
+.recommendations-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: 1fr;
+}
+
+@media (min-width: 768px) {
+  .recommendations-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 1024px) {
+  .recommendations-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.recommendation-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-left: 4px solid;
+  border-radius: 8px;
+  padding: 1.25rem;
+  transition: all 0.2s ease;
+}
+
+.recommendation-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
+}
+
+.recommendation-card.priority-high {
+  border-left-color: #ef4444;
+  background: #fef2f2;
+}
+
+.recommendation-card.priority-medium {
+  border-left-color: #f59e0b;
+  background: #fffbeb;
+}
+
+.recommendation-card.priority-low {
+  border-left-color: #3b82f6;
+  background: #eff6ff;
+}
+
+.recommendation-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.recommendation-card h4 {
+  margin: 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1e293b;
+  line-height: 1.3;
+}
+
+.priority-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: #ef4444;
+}
+
+.recommendation-actions {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.recommendation-actions li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: #475569;
+  line-height: 1.5;
+}
+
+.action-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #22c55e;
+}
+
 /* Results Actions */
 .results-actions {
   margin-top: 2rem;
@@ -998,9 +1145,19 @@
   }
 
   .score-section,
-  .concerns-section {
+  .concerns-section,
+  .recommendations-section {
     break-inside: avoid;
     margin-bottom: 1rem;
+  }
+
+  .recommendations-section {
+    page-break-inside: avoid;
+  }
+
+  .recommendation-card {
+    break-inside: avoid;
+    page-break-inside: avoid;
   }
 }
 
@@ -1008,6 +1165,15 @@
 @media (max-width: 640px) {
   .app-header {
     padding: 1.25rem 1rem;
+  }
+
+  .header-content {
+    gap: 0.75rem;
+  }
+
+  .app-logo {
+    width: 40px;
+    height: 40px;
   }
 
   .app-header h1 {

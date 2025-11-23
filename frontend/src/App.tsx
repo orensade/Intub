@@ -97,8 +97,18 @@ function App() {
       />
 
       <header className="app-header">
-        <h1 onClick={handleReset} style={{ cursor: 'pointer' }}>Intubation Difficulty Assessment</h1>
-        <p className="subtitle">AI-Assisted Airway Evaluation Tool</p>
+        <div className="header-content" onClick={handleReset} style={{ cursor: 'pointer' }}>
+          <svg width="48" height="48" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="none" className="app-logo">
+            <rect width="512" height="512" rx="96" fill="white"/>
+            <path d="M120 260 C120 170 200 100 300 100 L360 100" stroke="#2563EB" strokeWidth="28" strokeLinecap="round"/>
+            <circle cx="240" cy="300" r="80" stroke="#2563EB" strokeWidth="24" fill="none"/>
+            <circle cx="240" cy="300" r="34" fill="#2563EB"/>
+          </svg>
+          <div className="header-text">
+            <h1>Intubation Difficulty Assessment</h1>
+            <p className="subtitle">AI-Assisted Airway Evaluation Tool</p>
+          </div>
+        </div>
       </header>
 
       <main className="app-main">

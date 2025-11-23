@@ -3,6 +3,7 @@ import type { AnalysisResult, ImageFile } from "../types";
 import { ScoreGauge } from "./ScoreGauge";
 import { Tooltip, getExplanation } from "./Tooltip";
 import { RiskCategoryInfo } from "./RiskCategoryInfo";
+import { Recommendations, getAllRecommendations } from "./Recommendations";
 
 interface ResultsDisplayProps {
   result: AnalysisResult;
@@ -56,6 +57,17 @@ export function ResultsDisplay({ result, images, onReset, historyTimestamp, hist
       lines.push("", "Identified Concerns:");
       result.concerns.forEach((concern) => {
         lines.push(`  - ${concern}`);
+      });
+
+      // Add recommendations
+      lines.push("", "Clinical Recommendations:");
+      const recommendations = getAllRecommendations(result.concerns, result.risk_category);
+      recommendations.forEach((rec, index) => {
+        if (index > 0) lines.push("");
+        lines.push(`${rec.title}:`);
+        rec.actions.forEach((action) => {
+          lines.push(`  • ${action}`);
+        });
       });
     }
 
@@ -164,6 +176,11 @@ export function ResultsDisplay({ result, images, onReset, historyTimestamp, hist
           )}
         </div>
       </div>
+
+      {/* Recommendations Section */}
+      {result.concerns.length > 0 && (
+        <Recommendations concerns={result.concerns} riskCategory={result.risk_category} />
+      )}
 
       <div className="results-actions">
         <button className="new-assessment-button" onClick={onReset} aria-label="New Assessment">

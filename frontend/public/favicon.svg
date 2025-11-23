@@ -1,0 +1,14 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <!-- Background -->
+  <rect width="512" height="512" rx="96" fill="white"/>
+  
+  <!-- Laryngoscope arc -->
+  <path d="M120 260 C120 170 200 100 300 100 L360 100" stroke="#2563EB" stroke-width="28" stroke-linecap="round"/>
+  
+  <!-- Airway outer circle -->
+  <circle cx="240" cy="300" r="80" stroke="#2563EB" stroke-width="24" fill="none"/>
+  
+  <!-- Inner airway opening -->
+  <circle cx="240" cy="300" r="34" fill="#2563EB"/>
+</svg>
+
