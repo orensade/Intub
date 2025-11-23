@@ -49,3 +49,5 @@ coverage/
 # Misc
 *.local
 .cache/
+backend/model.pt
+backend/snippet.txt

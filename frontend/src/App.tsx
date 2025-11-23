@@ -8,7 +8,19 @@ import { useAssessmentHistory, createThumbnail } from "./hooks/useAssessmentHist
 import type { AnalysisResult, ImageFile, HistoryItem } from "./types";
 import "./App.css";
 
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5001";
+// Allow API URL override via ?api= parameter or env variable
+const getApiUrl = () => {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("api") || import.meta.env.VITE_API_URL || "http://localhost:5001";
+};
+
+const API_URL = getApiUrl();
+
+// Check URL parameter for mock mode: ?use=m
+const useMockMode = () => {
+  const params = new URLSearchParams(window.location.search);
+  return params.get("use") === "m";
+};
 
 function App() {
   const [images, setImages] = useState<ImageFile[]>([]);
@@ -33,8 +45,12 @@ function App() {
       formData.append("images", img.file);
     });
 
+    // Use mock endpoint if ?use=m is in URL, otherwise use AI
+    const isMockMode = useMockMode();
+    const endpoint = isMockMode ? "/analyze/mock" : "/analyze";
+
     try {
-      const response = await fetch(`${API_URL}/analyze`, {
+      const response = await fetch(`${API_URL}${endpoint}`, {
         method: "POST",
         body: formData,
       });

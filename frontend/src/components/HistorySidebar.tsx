@@ -15,19 +15,10 @@ export function HistorySidebar({
   onDeleteItem,
   onClearHistory,
 }: HistorySidebarProps) {
+  // Always start collapsed
   const [isExpanded, setIsExpanded] = useState(false);
   const sidebarRef = useRef<HTMLElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
-
-  // Default to expanded on desktop
-  useEffect(() => {
-    const checkWidth = () => {
-      setIsExpanded(window.innerWidth >= 1024);
-    };
-    checkWidth();
-    window.addEventListener("resize", checkWidth);
-    return () => window.removeEventListener("resize", checkWidth);
-  }, []);
 
   // Close sidebar when clicking outside
   useEffect(() => {

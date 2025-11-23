@@ -128,18 +128,10 @@ export function ResultsDisplay({ result, images, onReset, historyTimestamp, hist
 
         {/* Center: Score */}
         <div className="results-column results-column-score">
+          <RiskCategoryInfo currentCategory={result.risk_category} />
           <div className="score-section">
             <ScoreGauge score={result.score} riskCategory={result.risk_category} />
             <div className={getRiskBadgeClass()}>{result.risk_category}</div>
-            <p className="risk-description">
-              {result.risk_category === "Easy" &&
-                "Standard intubation techniques expected to succeed"}
-              {result.risk_category === "Moderate" &&
-                "Consider backup airway equipment and advanced techniques"}
-              {result.risk_category === "Difficult" &&
-                "High risk - prepare difficult airway cart and expert assistance"}
-            </p>
-            <RiskCategoryInfo currentCategory={result.risk_category} />
           </div>
         </div>
 

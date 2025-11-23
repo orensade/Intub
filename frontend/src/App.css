@@ -10,16 +10,17 @@
   background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
   color: white;
   padding: 1.5rem 2rem;
-  text-align: center;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .header-content {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 1rem;
   transition: opacity 0.2s ease;
+  max-width: 1200px;
+  margin: 0 auto;
 }
 
 .header-content:hover {
@@ -229,7 +230,79 @@
   text-overflow: ellipsis;
 }
 
-/* Analyze Circle Button */
+/* Analyze Buttons Container */
+.analyze-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+/* Analyze Button Base Style */
+.analyze-button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+
+.analyze-button svg {
+  width: 32px;
+  height: 32px;
+}
+
+.analyze-button span {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.analyze-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: none !important;
+}
+
+/* Demo Mode Button */
+.analyze-button-mock {
+  background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+  color: white;
+  box-shadow: 0 4px 14px rgba(100, 116, 139, 0.3);
+}
+
+.analyze-button-mock:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(100, 116, 139, 0.4);
+}
+
+.analyze-button-mock:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+/* AI Analysis Button */
+.analyze-button-ai {
+  background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+  color: white;
+  box-shadow: 0 4px 14px rgba(59, 130, 246, 0.4);
+}
+
+.analyze-button-ai:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+}
+
+.analyze-button-ai:active:not(:disabled) {
+  transform: translateY(-1px);
+}
+
+/* Legacy Circle Button (kept for compatibility) */
 .analyze-circle-button {
   display: flex;
   align-items: center;
@@ -280,37 +353,50 @@
 }
 
 .loading-spinner {
-  width: 64px;
-  height: 64px;
+  width: 120px;
+  height: 120px;
   color: #3b82f6;
 }
 
-.spinner-svg {
-  animation: rotate 1.4s linear infinite;
+.logo-spinner {
+  animation: pulse 3s ease-in-out infinite;
 }
 
-.spinner-svg circle {
-  animation: dash 1.4s ease-in-out infinite;
+.logo-part {
+  opacity: 0;
+  transform-origin: center;
+  animation: popIn 3s ease-in-out infinite;
 }
 
-@keyframes rotate {
-  100% {
-    transform: rotate(360deg);
+.logo-part-1 {
+  animation-delay: 0s;
+}
+
+.logo-part-2 {
+  animation-delay: 0.45s;
+}
+
+.logo-part-3 {
+  animation-delay: 0.9s;
+}
+
+@keyframes popIn {
+  0%, 100% {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+  15%, 85% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-@keyframes dash {
-  0% {
-    stroke-dasharray: 1, 200;
-    stroke-dashoffset: 0;
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
   }
   50% {
-    stroke-dasharray: 100, 200;
-    stroke-dashoffset: -35;
-  }
-  100% {
-    stroke-dasharray: 100, 200;
-    stroke-dashoffset: -125;
+    transform: scale(1.05);
   }
 }
 
@@ -494,7 +580,8 @@
 /* Center Column: Score */
 .results-column-score {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: flex-start;
   order: 0;
 }
 
@@ -503,7 +590,7 @@
     order: 0;
     background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
     border-radius: 12px;
-    padding: 1.5rem;
+    padding: 0.75rem 1.5rem 1.5rem 1.5rem;
   }
 }
 
@@ -520,6 +607,8 @@
   flex-direction: column;
   align-items: center;
   text-align: center;
+  width: 100%;
+  margin-top: 1rem;
 }
 
 .score-gauge {
@@ -739,8 +828,10 @@
    ===================================================== */
 
 .risk-category-info-inline {
-  margin-top: 0.75rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
   position: relative;
+  align-self: flex-start;
 }
 
 .risk-info-link {
