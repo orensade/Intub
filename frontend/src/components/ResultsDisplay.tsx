@@ -1,0 +1,175 @@
+import { useState, useMemo } from "react";
+import type { AnalysisResult, ImageFile } from "../types";
+import { ScoreGauge } from "./ScoreGauge";
+
+interface ResultsDisplayProps {
+  result: AnalysisResult;
+  images: ImageFile[];
+  onReset: () => void;
+  historyTimestamp?: number;
+  historyThumbnail?: string;
+}
+
+export function ResultsDisplay({ result, images, onReset, historyTimestamp, historyThumbnail }: ResultsDisplayProps) {
+  const [copySuccess, setCopySuccess] = useState(false);
+
+  const timestamp = useMemo(() => {
+    return historyTimestamp ? new Date(historyTimestamp) : new Date();
+  }, [historyTimestamp]);
+
+  const formatTimestamp = (date: Date) => {
+    return date.toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    }) + " at " + date.toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true,
+    });
+  };
+
+  const getRiskBadgeClass = () => {
+    switch (result.risk_category) {
+      case "Easy":
+        return "risk-badge risk-easy";
+      case "Moderate":
+        return "risk-badge risk-moderate";
+      case "Difficult":
+        return "risk-badge risk-difficult";
+    }
+  };
+
+  const getResultsText = () => {
+    const lines = [
+      "INTUBATION DIFFICULTY ASSESSMENT",
+      `Assessment Date: ${formatTimestamp(timestamp)}`,
+      "",
+      `Difficulty Score: ${result.score}/100`,
+      `Risk Category: ${result.risk_category}`,
+      `Images Analyzed: ${result.images_analyzed}`,
+    ];
+
+    if (result.concerns.length > 0) {
+      lines.push("", "Identified Concerns:");
+      result.concerns.forEach((concern) => {
+        lines.push(`  - ${concern}`);
+      });
+    }
+
+    lines.push("", "---", "This assessment is for clinical decision support only.");
+
+    return lines.join("\n");
+  };
+
+  const handleCopyResults = async () => {
+    try {
+      await navigator.clipboard.writeText(getResultsText());
+      setCopySuccess(true);
+      setTimeout(() => setCopySuccess(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
+  const handleExportReport = () => {
+    window.print();
+  };
+
+  return (
+    <div className="results-display">
+      <div className="results-header">
+        <div className="results-header-left">
+          <h2>Assessment Results</h2>
+          <span className="timestamp">Assessment completed: {formatTimestamp(timestamp)}</span>
+        </div>
+        <span className="images-count">
+          {result.images_analyzed} image{result.images_analyzed !== 1 ? "s" : ""} analyzed
+        </span>
+      </div>
+
+      <div className="results-layout">
+        {(images.length > 0 || historyThumbnail) && (
+          <div className="analyzed-images">
+            <h3>Analyzed Images</h3>
+            <div className="analyzed-images-grid">
+              {images.length > 0 ? (
+                images.map((image) => (
+                  <div key={image.id} className="analyzed-image-thumb">
+                    <img src={image.preview} alt={image.file.name} />
+                  </div>
+                ))
+              ) : historyThumbnail ? (
+                <div className="analyzed-image-thumb">
+                  <img src={historyThumbnail} alt="Assessment thumbnail" />
+                </div>
+              ) : null}
+            </div>
+          </div>
+        )}
+
+        <div className="results-main">
+          <div className="score-section">
+            <ScoreGauge score={result.score} riskCategory={result.risk_category} />
+            <div className={getRiskBadgeClass()}>{result.risk_category}</div>
+            <p className="risk-description">
+              {result.risk_category === "Easy" &&
+                "Standard intubation techniques expected to succeed"}
+              {result.risk_category === "Moderate" &&
+                "Consider backup airway equipment and advanced techniques"}
+              {result.risk_category === "Difficult" &&
+                "High risk - prepare difficult airway cart and expert assistance"}
+            </p>
+          </div>
+
+          {result.concerns.length > 0 && (
+            <div className="concerns-section">
+              <h3>Identified Concerns</h3>
+              <ul className="concerns-list">
+                {result.concerns.map((concern, index) => (
+                  <li key={index}>
+                    <svg
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      className="concern-icon"
+                    >
+                      <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z" />
+                      <line x1="12" y1="9" x2="12" y2="13" />
+                      <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                    {concern}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      </div>
+
+      <div className="results-actions">
+        <button className="reset-button" onClick={onReset}>
+          New Assessment
+        </button>
+        <div className="secondary-actions">
+          <button className="action-button" onClick={handleExportReport}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M6 9V2h12v7" />
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+              <rect x="6" y="14" width="12" height="8" />
+            </svg>
+            Export Report
+          </button>
+          <button className="action-button" onClick={handleCopyResults}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+            {copySuccess ? "Copied!" : "Copy Results"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
