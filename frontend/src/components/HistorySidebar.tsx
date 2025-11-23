@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { HistoryItem } from "../types";
 import { formatRelativeTime } from "../hooks/useAssessmentHistory";
 
@@ -16,6 +16,8 @@ export function HistorySidebar({
   onClearHistory,
 }: HistorySidebarProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const sidebarRef = useRef<HTMLElement>(null);
+  const toggleRef = useRef<HTMLButtonElement>(null);
 
   // Default to expanded on desktop
   useEffect(() => {
@@ -26,6 +28,24 @@ export function HistorySidebar({
     window.addEventListener("resize", checkWidth);
     return () => window.removeEventListener("resize", checkWidth);
   }, []);
+
+  // Close sidebar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (!isExpanded) return;
+
+      const target = event.target as Node;
+      const clickedInsideSidebar = sidebarRef.current?.contains(target);
+      const clickedOnToggle = toggleRef.current?.contains(target);
+
+      if (!clickedInsideSidebar && !clickedOnToggle) {
+        setIsExpanded(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isExpanded]);
 
   const getRiskBadgeClass = (category: string) => {
     switch (category) {
@@ -44,6 +64,7 @@ export function HistorySidebar({
     <>
       {/* Toggle button - always visible */}
       <button
+        ref={toggleRef}
         className={`sidebar-toggle ${isExpanded ? "expanded" : ""}`}
         onClick={() => setIsExpanded(!isExpanded)}
         aria-label={isExpanded ? "Collapse history" : "Expand history"}
@@ -64,7 +85,7 @@ export function HistorySidebar({
       )}
 
       {/* Sidebar content */}
-      <aside className={`history-sidebar ${isExpanded ? "expanded" : ""}`}>
+      <aside ref={sidebarRef} className={`history-sidebar ${isExpanded ? "expanded" : ""}`}>
         <div className="sidebar-header">
           <h3>Assessment History</h3>
           <button

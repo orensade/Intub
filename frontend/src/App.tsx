@@ -97,7 +97,7 @@ function App() {
       />
 
       <header className="app-header">
-        <h1>Intubation Difficulty Assessment</h1>
+        <h1 onClick={handleReset} style={{ cursor: 'pointer' }}>Intubation Difficulty Assessment</h1>
         <p className="subtitle">AI-Assisted Airway Evaluation Tool</p>
       </header>
 
@@ -117,7 +117,7 @@ function App() {
         ) : (
           <div className="upload-section">
             <div className="instructions">
-              <h2>Upload Airway Images</h2>
+              <h2>Upload Images</h2>
               <p>
                 Upload images of the patient's airway, mouth opening, and neck area for
                 assessment. Multiple images from different angles improve accuracy.
@@ -130,13 +130,19 @@ function App() {
               disabled={isLoading}
             />
 
-            <button
-              className="analyze-button"
-              onClick={handleAnalyze}
-              disabled={images.length === 0 || isLoading}
-            >
-              Analyze Images
-            </button>
+            {images.length > 0 && (
+              <button
+                className="analyze-circle-button"
+                onClick={handleAnalyze}
+                disabled={isLoading}
+                aria-label="Analyze Images"
+              >
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <line x1="5" y1="12" x2="19" y2="12" />
+                  <polyline points="12 5 19 12 12 19" />
+                </svg>
+              </button>
+            )}
           </div>
         )}
       </main>
